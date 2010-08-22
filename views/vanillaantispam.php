@@ -9,7 +9,7 @@ $this->Form->SetValue("DeleteSpam", $this->Settings->DeleteSpam);
 ?>
 <ul>
 	<li>
-		<div class="Info">More Information here...</div>
+		<div class="Info">This plugin uses both <a href="http://stopforumspam.com/" target="_blank">StopForumSpam.com</a> and <a href="http://akismet.com/" target="_blank">Akismet</a> to flag Spam</div>
 	</li>
 	<li>
 		<?php
@@ -24,6 +24,7 @@ $this->Form->SetValue("DeleteSpam", $this->Settings->DeleteSpam);
 	<li>
 		<?php
 		echo $this->Form->Label('Akistmet Key', 'Akismet Key');
+		echo "<span>[<a href=\"http://akismet.com/personal/\" target=\"_blank\">Get A Key</a>]</span>";
 		echo $this->Form->TextBox('AkismetKey', array("value"=>$this->Settings->AkismetKey));
 		?>
 	</li>
