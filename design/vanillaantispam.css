@@ -1,0 +1,20 @@
+.spam{
+	margin-top:15px;
+	border-top:4px solid #999;
+	padding-top:10px;
+}
+	.spam .spam_item{
+		margin-bottom:15px;
+		font-size:90%;
+		padding:5px;
+		background-color:#e2f4ff;
+		border:1px solid #aedefc;
+	}
+		.spam .spam_item span{
+			font-weight:bold;
+		}
+		.spam .spam_item .spam_action{
+			margin-top:5px;
+			border-top:1px dotted #ccc;
+			padding-top:5px;
+		}
