@@ -36,18 +36,6 @@ class VanillaAntiSpamPlugin extends Gdn_Plugin {
 		{
 			Redirect('/');
 		}
-		
-		// Get Settings
-		$rows = Gdn::SQL()->Select('*')
-			->From('AntiSpam')
-			->Where('ID', '1')
-			->Get();
-		
-		$settings = $rows->FirstRow();
-		$this->stopforumspam_active = $settings->StopForumSpam;
-		$this->akismet_active = $settings->Akismet;
-		$this->akismet_key = $settings->AkismetKey;
-		$this->ip_address = $_SERVER['REMOTE_ADDR'] != getenv('SERVER_ADDR') ? $_SERVER['REMOTE_ADDR'] : getenv('HTTP_X_FORWARDED_FOR');
 	}
 	
 	public function Base_GetAppSettingsMenuItems_Handler(&$Sender)
@@ -121,8 +109,8 @@ class VanillaAntiSpamPlugin extends Gdn_Plugin {
 			if ($akismetkey)
 			{
 				// Test Akismet Key
-				$akismet = new Akismet(Gdn::Request()->Url("/", TRUE), $akismetkey);
-				if( ! $akismet->isKeyValid())
+				$akismetcheck = new Akismet(Gdn::Request()->Url("/", TRUE), $akismetkey);
+				if( ! $akismetcheck->isKeyValid())
 				{
 					$Sender->Form->AddError('Your Akismet Key has been checked at Akismet.com and appears to be invalid');
 				}
@@ -166,6 +154,8 @@ class VanillaAntiSpamPlugin extends Gdn_Plugin {
 	// Tag Discussions As They Are Created
 	public function PostController_AfterDiscussionSave_Handler($Sender)
 	{
+		$this->_GetSettings();
+		
 		// Signed in users only.
 		if (!($UserID = Gdn::Session()->UserID)) return;
 	
@@ -197,6 +187,8 @@ class VanillaAntiSpamPlugin extends Gdn_Plugin {
 	// Tag Comments As They Are Created
 	public function PostController_AfterCommentSave_Handler($Sender)
 	{
+		$this->_GetSettings();
+		
 		// Signed in users only.
 		if (!($UserID = Gdn::Session()->UserID)) return;
 		
@@ -321,6 +313,21 @@ class VanillaAntiSpamPlugin extends Gdn_Plugin {
 	{
 		$UserModel = new UserModel();
 		return $UserModel->Get($UserID);
+	}
+	
+	private function _GetSettings()
+	{
+		// Get Settings
+		$rows = Gdn::SQL()->Select('*')
+			->From('AntiSpam')
+			->Where('ID', '1')
+			->Get();
+		
+		$settings = $rows->FirstRow();
+		$this->stopforumspam_active = $settings->StopForumSpam;
+		$this->akismet_active = $settings->Akismet;
+		$this->akismet_key = $settings->AkismetKey;
+		$this->ip_address = $_SERVER['REMOTE_ADDR'] != getenv('SERVER_ADDR') ? $_SERVER['REMOTE_ADDR'] : getenv('HTTP_X_FORWARDED_FOR');
 	}
 	
 	// Enable AntiSpam
