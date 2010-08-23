@@ -5,7 +5,7 @@
  *
  * @package		VanillaAntiSpam
  * @author		David Kobia, {@link http://www.dkfactor.com http://www.dkfactor.com}
- * @version		0.5
+ * @version		0.6
  * @copyright	David Kobia, {@link http://www.dkfactor.com http://www.dkfactor.com}
  * @license		http://www.gnu.org/licenses/gpl-3.0.txt GPL License
  */
@@ -15,7 +15,7 @@
 $PluginInfo['VanillaAntiSpam'] = array(
 	'Name' => 'Vanilla Anti Spam',
 	'Description' => "<a href=\"http://github.com/dkobia/VanillaAntiSpam\" target=\"_blank\">Anti Spam via Akismet and StopForumSpam.com</a>",
-	'Version' => '0.5',
+	'Version' => '0.6',
 	'SettingsUrl' => '/dashboard/plugin/vanillaantispam',
 	'Author' => "David Kobia",
 	'AuthorEmail' => 'david@kobia.net',
@@ -28,15 +28,6 @@ class VanillaAntiSpamPlugin extends Gdn_Plugin {
 	private $akismet_active = FALSE;
 	private $akismet_key = NULL;
 	private $ip_address = NULL;
-	
-	public function __construct()
-	{
-		// Does this User Have Permissions?
-		if ( ! Gdn::Session()->CheckPermission('Garden.Settings.Manage'))
-		{
-			Redirect('/');
-		}
-	}
 	
 	public function Base_GetAppSettingsMenuItems_Handler(&$Sender)
 	{
@@ -57,6 +48,12 @@ class VanillaAntiSpamPlugin extends Gdn_Plugin {
 	
 	public function Controller_Notspam(&$Sender)
 	{
+		// Does this User Have Permissions?
+		if ( ! Gdn::Session()->CheckPermission('Garden.Settings.Manage'))
+		{
+			Redirect('/');
+		}
+		
 		$Arguments = $Sender->RequestArgs;
 		if (sizeof($Arguments) != 2) return;
 		list($Controller, $ID) = $Arguments;
@@ -71,6 +68,12 @@ class VanillaAntiSpamPlugin extends Gdn_Plugin {
 	// Render The AntiSpam Settings Controller
 	public function Controller_Index(&$Sender)
 	{
+		// Does this User Have Permissions?
+		if ( ! Gdn::Session()->CheckPermission('Garden.Settings.Manage'))
+		{
+			Redirect('/');
+		}
+		
 		include_once(PATH_PLUGINS.'/VanillaAntiSpam/class.akismet.php');
 		
 		$Sender->AddCssFile('admin.css');
